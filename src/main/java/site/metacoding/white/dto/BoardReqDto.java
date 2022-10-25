@@ -8,7 +8,7 @@ public class BoardReqDto {
 
     @Setter
     @Getter
-    public static class BoardSaveDto { // 게시글쓰기 디티오
+    public static class BoardSaveReqDto { // 게시글쓰기 디티오
         private String title;
         private String content;
         private User user; // 서비스 로직 (서비스Dto만들지말고)
