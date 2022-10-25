@@ -14,8 +14,9 @@ public class BoardRepository {
 
     private final EntityManager em;
 
-    public void save(Board board) {
+    public Board save(Board board) {
         em.persist(board); // insert 쿼리가 자동으로 돌면서 insert가 됨 / 아직은 이해하지 못하는 코드
+        return board;
     }
 
     public Board findById(Long id) {
