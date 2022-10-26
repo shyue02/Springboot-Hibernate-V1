@@ -1,6 +1,7 @@
 package site.metacoding.white.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -19,12 +20,15 @@ public class BoardRepository {
         return board;
     }
 
-    public Board findById(Long id) {
+    public Optional<Board> findById(Long id) {
         // JPQL 문법
-        Board boardPS = em.createQuery("select b from Board b where b.id = :id", Board.class) // 엔티티이름 별칭 where
-                .setParameter("id", id) // 맵핑되는거 걸기
-                .getSingleResult(); // 한 건 받기
-        return boardPS;
+        Optional<Board> boardOP = Optional.ofNullable(em
+                .createQuery("select b from Board b where b.id = :id",
+                        Board.class)
+                .setParameter("id", id) // 매핑되는거 걸기
+                .getSingleResult()); // 한 건 받기
+
+        return boardOP;
     }
 
     public List<Board> findAll() {

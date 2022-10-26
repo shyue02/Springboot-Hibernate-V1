@@ -1,5 +1,7 @@
 package site.metacoding.white.dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.white.domain.Board;
@@ -21,6 +23,5 @@ public class BoardReqDto {
                     .build();
         }
     }
-
     // DTO는 여기다가 추가로
 }

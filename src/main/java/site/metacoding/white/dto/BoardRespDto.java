@@ -1,5 +1,7 @@
 package site.metacoding.white.dto;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import site.metacoding.white.domain.Board;
@@ -32,6 +34,61 @@ public class BoardRespDto {
             this.title = board.getTitle();
             this.content = board.getContent();
             this.user = new UserDto(board.getUser());
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class BoardDetailRespDto {
+        private Long id;
+        private String title;
+        private String content;
+        private UserDto user;
+
+        @Setter
+        @Getter
+        public static class UserDto { // 내부에서 쓰는거라서 import 안 해도 됨 -> 이름 UserRespDto -> UserDto해도 됨
+            private Long id;
+            private String username;
+
+            public UserDto(User user) {
+                this.id = user.getId();
+                this.username = user.getUsername();
+            }
+        }
+
+        public BoardDetailRespDto(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.user = new UserDto(board.getUser());
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class BoardAllRespDto {
+        private Long id;
+        private String title;
+        private String content;
+        private UserDto user;
+
+        @Setter
+        @Getter
+        public static class UserDto {
+            private Long id;
+            private String username;
+
+            public UserDto(User user) {
+                this.id = user.getId();
+                this.username = user.getUsername();
+            }
+        }
+
+        public BoardAllRespDto(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
         }
     }
 }
