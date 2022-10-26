@@ -1,7 +1,5 @@
 package site.metacoding.white.web;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import site.metacoding.white.domain.Board;
-
 import site.metacoding.white.dto.BoardReqDto.BoardSaveReqDto;
+import site.metacoding.white.dto.BoardReqDto.BoardUpdateReqDto;
 import site.metacoding.white.dto.BoardRespDto.BoardSaveRespDto;
 import site.metacoding.white.dto.ResponseDto;
 import site.metacoding.white.dto.SessionUser;
@@ -49,15 +46,15 @@ public class BoardApiController {
     }
 
     @PutMapping("/board/{id}")
-    public String updata(@PathVariable Long id, @RequestBody Board board) { // 실제로는 엔티티가 아니라 dto를 적어줘야함!
-        boardService.update(id, board);
-        return "ok";
+    public ResponseDto<?> update(@PathVariable Long id, @RequestBody BoardUpdateReqDto boardUpdateReqDto) {
+        boardUpdateReqDto.setId(id);
+        return new ResponseDto<>(1, "성공", boardService.update(boardUpdateReqDto));
     }
 
     @DeleteMapping("/board/{id}")
-    public String deleteById(@PathVariable Long id) {
+    public ResponseDto<?> deleteById(@PathVariable Long id) {
         boardService.deleteById(id);
-        return "ok";
+        return new ResponseDto<>(1, "성공", null);
     }
 
     // @GetMapping("/v2/board/{id}")

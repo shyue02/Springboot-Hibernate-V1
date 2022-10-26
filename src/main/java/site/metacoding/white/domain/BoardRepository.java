@@ -8,27 +8,31 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
-@Repository // -> 붙여야 IoC에 뜬다
+@Repository
 public class BoardRepository {
-
     private final EntityManager em;
 
     public Board save(Board board) {
-        em.persist(board); // insert 쿼리가 자동으로 돌면서 insert가 됨 / 아직은 이해하지 못하는 코드
+        em.persist(board);
         return board;
     }
 
     public Optional<Board> findById(Long id) {
-        // JPQL 문법
-        Optional<Board> boardOP = Optional.ofNullable(em
-                .createQuery("select b from Board b where b.id = :id",
-                        Board.class)
-                .setParameter("id", id) // 매핑되는거 걸기
-                .getSingleResult()); // 한 건 받기
+        try {
+            Optional<Board> boardOP = Optional.of(em
+                    .createQuery("select b from Board b where b.id = :id",
+                            Board.class)
+                    .setParameter("id", id)
+                    .getSingleResult());
+            return boardOP;
+        } catch (Exception e) {
+            return Optional.empty();
+        }
 
-        return boardOP;
     }
 
     public List<Board> findAll() {
@@ -43,4 +47,23 @@ public class BoardRepository {
                 .setParameter("id", id)
                 .executeUpdate();
     }
+
+    // JPQL 문법
+    // Board boardPS = em.createQuery("select b from Board b where b.id = :id",
+    // Board.class)
+    // .setParameter("id", id)
+    // .getSingleResult();
+
+    // Board boardPS = (Board) em
+    // .createNativeQuery("select * from board b inner join user u on b.user_id =
+    // u.id where b.id = :id",
+    // Board.class)
+    // .setParameter("id", id)
+    // .getSingleResult();
+
+    // Board boardPS = em
+    // .createQuery("select b from Board b join fetch b.user u where b.id = :id",
+    // Board.class)
+    // .setParameter("id", id)
+    // .getSingleResult();
 }
