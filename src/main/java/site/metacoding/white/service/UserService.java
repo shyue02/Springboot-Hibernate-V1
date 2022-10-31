@@ -1,6 +1,6 @@
 package site.metacoding.white.service;
 
-import javax.websocket.Session;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +14,18 @@ import site.metacoding.white.dto.UserReqDto.LoginReqDto;
 import site.metacoding.white.dto.UserRespDto.JoinRespDto;
 import site.metacoding.white.util.SHA256;
 
-@RequiredArgsConstructor // 생성자 주입 / 없으면 디폴트생성자
-@Service // -> 붙여야 IoC에 뜬다
+// 트랜잭션 관리
+// DTO 변환해서 컨트롤러에게 돌려줘야함
+
+@RequiredArgsConstructor
+@Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final SHA256 sha256;
 
-    // 응답의 Dto는 서비스에서 만든다
-    @Transactional // -> 트랜잭션이 붙어있지 않으면 영속화 되어 있는 객체가 flush가 안 됨.
+    // 응답의 DTO는 서비스에서 만든다.
+    @Transactional // 트랜잭션이 붙이지 않으면 영속화 되어 있는 객체가 flush가 안됨.
     public JoinRespDto save(JoinReqDto joinReqDto) {
         // 비밀번호 해시
         String encPassword = sha256.encrypt(joinReqDto.getPassword());
@@ -38,12 +41,17 @@ public class UserService {
     @Transactional(readOnly = true)
     public SessionUser login(LoginReqDto loginReqDto) {
         String encPassword = sha256.encrypt(loginReqDto.getPassword());
-        User userPS = userRepository.findByUsername(loginReqDto.getUsername());
-        if (userPS.getPassword().equals(encPassword)) {
-            return new SessionUser(userPS);
-        } else {
+        Optional<User> userOP = userRepository.findByUsername(loginReqDto.getUsername());
+        if (userOP.isEmpty()) {
             throw new RuntimeException("아이디 혹은 패스워드가 잘못 입력되었습니다.");
         }
-    }// 트랜잭션 종료
+
+        User userPS = userOP.get();
+        if (!userPS.getPassword().equals(encPassword)) {
+            throw new RuntimeException("아이디 혹은 패스워드가 잘못 입력되었습니다.");
+        }
+
+        return new SessionUser(userPS);
+    } // 트랜잭션 종료
 
 }
