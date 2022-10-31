@@ -1,5 +1,9 @@
 package site.metacoding.white.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,14 +109,14 @@ public class BoardApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.post("/board").content(body)
+                .perform(post("/board").content(body)
                         .contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
                         .session(session));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();
         System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1L));
+        resultActions.andExpect(jsonPath("$.code").value(1L));
     }
 
     @Test
@@ -122,7 +126,7 @@ public class BoardApiControllerTest {
 
         // when
         ResultActions resultActions = mvc
-                .perform(MockMvcRequestBuilders.get("/board/" + id).accept(APPLICATION_JSON));
+                .perform(get("/board/" + id).accept(APPLICATION_JSON));
 
         // then
         MvcResult mvcResult = resultActions.andReturn();

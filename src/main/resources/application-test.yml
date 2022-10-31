@@ -27,5 +27,8 @@ spring:
 
 logging:
   level:
-    '[org.springframework.web]': DEBUG
-    '[org.hibernate]': DEBUG
+    '[org.hibernate.SQL]': DEBUG
+    '[site.metacoding.white]': DEBUG
+
+
+    
